@@ -25,7 +25,7 @@ export default function App() {
         if (token) {
           setInitialRoute("Dashboard");
         } else {
-          setInitialRoute('Entry');
+          setInitialRoute('Dashboard');
         }
       } catch (e) {
         setInitialRoute('Dashboard');

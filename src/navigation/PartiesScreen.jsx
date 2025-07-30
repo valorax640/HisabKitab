@@ -53,12 +53,12 @@ const PartiesScreen = ({navigation}) => {
     const [kitabModalVisible, setKitabModalVisible] = useState(false);
     const [businessName, setBusinessName] = useState('My Business');
     const [tempBusinessName, setTempBusinessName] = useState('My Business');
-    const [selectedKitab, setSelectedKitab] = useState('Shop');
+    const [selectedKitab, setSelectedKitab] = useState('Bill');
 
     // Sample kitab data
     const [kitabs] = useState([
-        { id: 1, name: 'Shop', customers: 0, isSelected: true },
-        { id: 2, name: 'Bill', customers: 1, isSelected: false },
+        { id: 1, name: 'Shop', customers: 0, isSelected: false },
+        { id: 2, name: 'Bill', customers: 1, isSelected: true },
     ]);
 
     // Tab content components
@@ -136,7 +136,7 @@ const PartiesScreen = ({navigation}) => {
                 <Icon
                     name={kitab.isSelected ? "check-circle" : "radio-button-unchecked"}
                     size={24}
-                    color={kitab.isSelected ? "#2196F3" : "#ccc"}
+                    color={kitab.isSelected ? "#388e3c" : "#ccc"}
                 />
             </View>
         </TouchableOpacity>
@@ -478,9 +478,9 @@ const styles = StyleSheet.create({
     },
     selectedKitabItem: {
         backgroundColor: '#f8f9ff',
-        borderColor: '#2196F3',
-        borderWidth: 2,
-        marginHorizontal: 16,
+        // borderColor: '#388e3c',
+        // borderWidth: 2,
+        // marginHorizontal: 16,
         borderRadius: 12,
         marginVertical: 4,
     },
@@ -488,7 +488,7 @@ const styles = StyleSheet.create({
         width: 48,
         height: 48,
         borderRadius: 24,
-        backgroundColor: '#2196F3',
+        backgroundColor: '#388e3c',
         alignItems: 'center',
         justifyContent: 'center',
         marginRight: 16,
@@ -518,7 +518,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#2196F3',
+        backgroundColor: '#388e3c',
         marginHorizontal: 20,
         marginTop: 20,
         paddingVertical: 16,
