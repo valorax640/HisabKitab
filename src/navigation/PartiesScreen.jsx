@@ -39,7 +39,7 @@ try {
     Icon = IconFallback;
 }
 
-const PartiesScreen = () => {
+const PartiesScreen = ({navigation}) => {
     const layout = useWindowDimensions();
     const [index, setIndex] = useState(0);
     const [routes] = useState([
@@ -141,7 +141,10 @@ const PartiesScreen = () => {
 
             {/* Add Customer Button */}
             <View style={styles.addCustomerRow}>
-                <TouchableOpacity style={styles.addCustomerBtn}>
+                <TouchableOpacity
+                    style={styles.addCustomerBtn}
+                    onPress={() => navigation.navigate('ContactList')}
+                >
                     <Icon name="person-add" size={20} color="#000" />
                     <Text style={styles.addCustomerText}>ADD CUSTOMER</Text>
                 </TouchableOpacity>

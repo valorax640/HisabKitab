@@ -5,9 +5,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import EntryScreen from './src/screens/EntryScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import OtpScreen from './src/screens/OtpScreen';
+import ContactList from './src/screens/ContactList';
+import AddCustomer from './src/screens/AddCustomer';
+import NoInternet from './src/screens/NoInternet';
 import BottomTabs from './src/navigation/BottomTabs';
-// import DashboardTabs from './src/navigation/DashboardTabs';
 import { ActivityIndicator, View } from 'react-native';
+import ConnectionWrapper from './src/components/ConnectionWrapper';
+import { setNavigationRef, requestUserPermission, NotificationListener } from './src/FirebaseNotification';
 
 const Stack = createNativeStackNavigator();
 
@@ -21,13 +25,18 @@ export default function App() {
         if (token) {
           setInitialRoute("Dashboard");
         } else {
-          setInitialRoute('Dashboard');
+          setInitialRoute('Entry');
         }
       } catch (e) {
         setInitialRoute('Dashboard');
       }
     };
     checkToken();
+  }, []);
+
+  useEffect(() => {
+    requestUserPermission();
+    NotificationListener();
   }, []);
 
   if (initialRoute === '') {
@@ -39,15 +48,21 @@ export default function App() {
     );
   }
 
+
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName={initialRoute} screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Entry" component={EntryScreen} />
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Otp" component={OtpScreen} />
-        <Stack.Screen name="Dashboard" component={BottomTabs} />
-        {/* <Stack.Screen name="Dashboard" component={DashboardTabs} /> */}
-      </Stack.Navigator>
+    <NavigationContainer ref={(ref) => { setNavigationRef(ref) }}>
+      <ConnectionWrapper>
+        <Stack.Navigator initialRouteName={initialRoute} screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="Entry" component={EntryScreen} />
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Otp" component={OtpScreen} />
+          <Stack.Screen name="Dashboard" component={BottomTabs} />
+          <Stack.Screen name="ContactList" component={ContactList} />
+          <Stack.Screen name="AddCustomer" component={AddCustomer} />
+          <Stack.Screen name="NoInternet" component={NoInternet} />
+          {/* <Stack.Screen name="Dashboard" component={DashboardTabs} /> */}
+        </Stack.Navigator>
+      </ConnectionWrapper>
     </NavigationContainer>
   );
 }
