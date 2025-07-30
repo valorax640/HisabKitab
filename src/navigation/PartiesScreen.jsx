@@ -21,6 +21,9 @@ const IconFallback = ({ name, size = 20, color = '#000', style }) => {
         'picture-as-pdf': '📄',
         'arrow-forward': '→',
         'person-add': '👤+',
+        'check-circle': '✓',
+        'radio-button-unchecked': '○',
+        'add': '+',
     };
 
     return (
@@ -47,8 +50,16 @@ const PartiesScreen = ({navigation}) => {
         { key: 'suppliers', title: 'Suppliers' },
     ]);
     const [editModalVisible, setEditModalVisible] = useState(false);
+    const [kitabModalVisible, setKitabModalVisible] = useState(false);
     const [businessName, setBusinessName] = useState('My Business');
     const [tempBusinessName, setTempBusinessName] = useState('My Business');
+    const [selectedKitab, setSelectedKitab] = useState('Shop');
+
+    // Sample kitab data
+    const [kitabs] = useState([
+        { id: 1, name: 'Shop', customers: 0, isSelected: true },
+        { id: 2, name: 'Bill', customers: 1, isSelected: false },
+    ]);
 
     // Tab content components
     const CustomersRoute = () => (
@@ -93,6 +104,43 @@ const PartiesScreen = ({navigation}) => {
         setTempBusinessName(businessName);
         setEditModalVisible(false);
     };
+
+    const handleChooseKitab = () => {
+        setEditModalVisible(false);
+        setKitabModalVisible(true);
+    };
+
+    const handleKitabSelect = (kitabName) => {
+        setSelectedKitab(kitabName);
+        setBusinessName(kitabName);
+        setKitabModalVisible(false);
+    };
+
+    const renderKitabItem = (kitab) => (
+        <TouchableOpacity
+            key={kitab.id}
+            style={[
+                styles.kitabItem,
+                kitab.isSelected && styles.selectedKitabItem
+            ]}
+            onPress={() => handleKitabSelect(kitab.name)}
+        >
+            <View style={styles.kitabIconContainer}>
+                <Text style={styles.kitabIcon}>{kitab.name.charAt(0)}</Text>
+            </View>
+            <View style={styles.kitabInfo}>
+                <Text style={styles.kitabName}>{kitab.name}</Text>
+                <Text style={styles.kitabCustomers}>{kitab.customers} Customers</Text>
+            </View>
+            <View style={styles.kitabSelector}>
+                <Icon
+                    name={kitab.isSelected ? "check-circle" : "radio-button-unchecked"}
+                    size={24}
+                    color={kitab.isSelected ? "#2196F3" : "#ccc"}
+                />
+            </View>
+        </TouchableOpacity>
+    );
 
     return (
         <SafeAreaView style={styles.container}>
@@ -172,12 +220,6 @@ const PartiesScreen = ({navigation}) => {
                         />
 
                         <View style={styles.modalButtons}>
-                            {/* <TouchableOpacity
-                                style={styles.cancelButton}
-                                onPress={handleCancel}
-                            >
-                                <Text style={styles.cancelButtonText}>Cancel</Text>
-                            </TouchableOpacity> */}
                             <TouchableOpacity
                                 style={styles.saveButton}
                                 onPress={handleSave}
@@ -190,11 +232,31 @@ const PartiesScreen = ({navigation}) => {
                             <TouchableOpacity>
                                 <Text style={styles.modalBottomText}>Create New HisabKitab</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity>
+                            <TouchableOpacity onPress={handleChooseKitab}>
                                 <Text style={styles.modalBottomText}>Choose another Kitab</Text>
                             </TouchableOpacity>
                         </View>
+                    </View>
+                </View>
+            </Modal>
 
+            {/* Choose Kitab Modal */}
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={kitabModalVisible}
+                onRequestClose={() => setKitabModalVisible(false)}
+            >
+                <View style={styles.modalOverlay}>
+                    <View style={styles.kitabModalContainer}>
+                        <ScrollView showsVerticalScrollIndicator={false}>
+                            {kitabs.map(renderKitabItem)}
+                        </ScrollView>
+                        
+                        <TouchableOpacity style={styles.createNewKitabBtn}>
+                            <Icon name="add" size={20} color="#fff" />
+                            <Text style={styles.createNewKitabText}>CREATE NEW KHATABOOK</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </Modal>
@@ -332,10 +394,6 @@ const styles = StyleSheet.create({
     tabItem: {
         alignItems: 'center',
     },
-    tabLabel: {
-        fontSize: 12,
-        marginTop: 4,
-    },
     // Edit Modal Styles
     modalOverlay: {
         flex: 1,
@@ -400,5 +458,76 @@ const styles = StyleSheet.create({
         color: '#388e3c',
         textAlign: 'center',
         marginTop: 20,
-    }
+    },
+    // Kitab Modal Styles
+    kitabModalContainer: {
+        backgroundColor: '#fff',
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        paddingTop: 20,
+        paddingBottom: 40,
+        maxHeight: '70%',
+    },
+    kitabItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 20,
+        paddingVertical: 16,
+        borderBottomWidth: 1,
+        borderBottomColor: '#f0f0f0',
+    },
+    selectedKitabItem: {
+        backgroundColor: '#f8f9ff',
+        borderColor: '#2196F3',
+        borderWidth: 2,
+        marginHorizontal: 16,
+        borderRadius: 12,
+        marginVertical: 4,
+    },
+    kitabIconContainer: {
+        width: 48,
+        height: 48,
+        borderRadius: 24,
+        backgroundColor: '#2196F3',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginRight: 16,
+    },
+    kitabIcon: {
+        color: '#fff',
+        fontSize: 20,
+        fontWeight: 'bold',
+    },
+    kitabInfo: {
+        flex: 1,
+    },
+    kitabName: {
+        fontSize: 16,
+        fontWeight: '600',
+        color: '#333',
+        marginBottom: 4,
+    },
+    kitabCustomers: {
+        fontSize: 14,
+        color: '#666',
+    },
+    kitabSelector: {
+        marginLeft: 16,
+    },
+    createNewKitabBtn: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#2196F3',
+        marginHorizontal: 20,
+        marginTop: 20,
+        paddingVertical: 16,
+        borderRadius: 12,
+    },
+    createNewKitabText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: '600',
+        marginLeft: 8,
+    },
 });
