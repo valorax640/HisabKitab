@@ -7,7 +7,7 @@ import LoginScreen from './src/screens/LoginScreen';
 import OtpScreen from './src/screens/OtpScreen';
 import ContactList from './src/screens/ContactList';
 import AddCustomer from './src/screens/AddCustomer';
-import NoInternet from './src/screens/NoInternet';
+import CustomerDetailsScreen from './src/screens/CustomerDetailsScreen';
 import BottomTabs from './src/navigation/BottomTabs';
 import { ActivityIndicator, View } from 'react-native';
 import ConnectionWrapper from './src/components/ConnectionWrapper';
@@ -25,10 +25,10 @@ export default function App() {
         if (token) {
           setInitialRoute("Dashboard");
         } else {
-          setInitialRoute('Dashboard');
+          setInitialRoute('CustomerDetailsScreen');
         }
       } catch (e) {
-        setInitialRoute('Dashboard');
+        setInitialRoute('CustomerDetailsScreen');
       }
     };
     checkToken();
@@ -59,7 +59,7 @@ export default function App() {
           <Stack.Screen name="Dashboard" component={BottomTabs} />
           <Stack.Screen name="ContactList" component={ContactList} />
           <Stack.Screen name="AddCustomer" component={AddCustomer} />
-          <Stack.Screen name="NoInternet" component={NoInternet} />
+          <Stack.Screen name="CustomerDetailsScreen" component={CustomerDetailsScreen} />
           {/* <Stack.Screen name="Dashboard" component={DashboardTabs} /> */}
         </Stack.Navigator>
       </ConnectionWrapper>

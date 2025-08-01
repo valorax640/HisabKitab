@@ -11,38 +11,13 @@ import {
     ScrollView,
     Modal,
     useWindowDimensions,
+    FlatList,
 } from 'react-native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
+import CommonHeader from '../components/CommonHeader';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
-// Fallback component for when icons don't load
-const IconFallback = ({ name, size = 20, color = '#000', style }) => {
-    const iconMap = {
-        'edit': '✏️',
-        'picture-as-pdf': '📄',
-        'arrow-forward': '→',
-        'person-add': '👤+',
-        'check-circle': '✓',
-        'radio-button-unchecked': '○',
-        'add': '+',
-    };
-
-    return (
-        <Text style={[{ fontSize: size, color }, style]}>
-            {iconMap[name] || '•'}
-        </Text>
-    );
-};
-
-// Try to import vector icons, fallback to our component if it fails
-let Icon;
-try {
-    Icon = require('react-native-vector-icons/MaterialIcons').default;
-} catch (error) {
-    console.warn('Vector icons not available, using fallback');
-    Icon = IconFallback;
-}
-
-const PartiesScreen = ({navigation}) => {
+const PartiesScreen = ({ navigation }) => {
     const layout = useWindowDimensions();
     const [index, setIndex] = useState(0);
     const [routes] = useState([
@@ -61,15 +36,121 @@ const PartiesScreen = ({navigation}) => {
         { id: 2, name: 'Bill', customers: 1, isSelected: true },
     ]);
 
+    const customers = [
+        { name: 'Suman TIB', amount: '₹ 3,000', date: '2 days ago', type: 'got' },
+        { name: 'Rakesh Kumar', amount: '₹ 1,200', date: '1 day ago', type: 'gave' },
+        { name: 'Priya Sharma', amount: '₹ 500', date: '3 days ago', type: 'got' },
+        { name: 'Aman Verma', amount: '₹ 2,700', date: '5 days ago', type: 'gave' },
+        { name: 'Deepika S.', amount: '₹ 800', date: '6 days ago', type: 'got' },
+        { name: 'Raj Tiwari', amount: '₹ 900', date: '2 days ago', type: 'got' },
+        { name: 'Sunil Mehta', amount: '₹ 4,000', date: '1 day ago', type: 'gave' },
+        { name: 'Alok Jain', amount: '₹ 350', date: '4 days ago', type: 'got' },
+        { name: 'Meena Kumari', amount: '₹ 2,100', date: '1 week ago', type: 'gave' },
+        { name: 'Suresh Das', amount: '₹ 450', date: '2 weeks ago', type: 'got' },
+        { name: 'Anjali D.', amount: '₹ 1,700', date: '3 weeks ago', type: 'gave' },
+        { name: 'Vipul Thakur', amount: '₹ 2,200', date: '4 days ago', type: 'got' },
+        { name: 'Harshit K.', amount: '₹ 600', date: 'Yesterday', type: 'gave' },
+        { name: 'Kiran Bedi', amount: '₹ 900', date: 'Today', type: 'got' },
+        { name: 'Zoya Khan', amount: '₹ 1,300', date: 'Today', type: 'gave' },
+    ];
+
+
     // Tab content components
     const CustomersRoute = () => (
-        <ScrollView contentContainerStyle={styles.tabContent}>
-            <Text style={styles.emptyText}>Add customers & collect payments faster</Text>
-        </ScrollView>
+        <>
+            <View style={{ backgroundColor: '#388e3c', paddingVertical: 10 }}>
+                <View style={styles.summaryColumn}>
+                    <View style={styles.summaryRow}>
+                        <View style={styles.summaryBox}>
+                            <Text style={styles.label}>You will give</Text>
+                            <Text style={styles.greenAmount}>₹ 0</Text>
+                        </View>
+                        <View style={styles.summaryBox}>
+                            <Text style={styles.label}>You will get</Text>
+                            <Text style={styles.redAmount}>₹ 0</Text>
+                        </View>
+                        <View style={styles.summaryBox}>
+                            <Text style={styles.label}>QR Collections</Text>
+                            <Text style={styles.blueAmount}>₹ 0</Text>
+                        </View>
+                    </View>
+                    <TouchableOpacity style={styles.viewReports}>
+                        <Icon name="assessment" size={16} color="#388e3c" />
+                        <Text style={styles.reportText}>VIEW REPORTS</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+            <View style={styles.searchRow}>
+                <TextInput placeholder="Search Customer" style={styles.searchInput} />
+                <Icon name="filter-list" size={24} style={{ marginHorizontal: 10 }} />
+                <Text style={{ color: 'blue' }}>📘 Cashbook</Text>
+            </View>
+            <FlatList
+                data={customers}
+                keyExtractor={(_, i) => i.toString()}
+                ListHeaderComponent={
+                    <>
+
+                    </>
+                }
+                renderItem={({ item }) => (
+                    <View style={styles.customerItem}>
+                        <Image
+                            source={{ uri: 'https://t4.ftcdn.net/jpg/08/06/58/03/240_F_806580330_nM9J5dzapvn7hGqEetnMThzp9qZn0HT9.jpg' }}
+                            style={styles.avatar}
+                        />
+                        <View style={{ flex: 1 }}>
+                            <Text style={styles.customerName}>{item.name}</Text>
+                            <Text style={styles.date}>{item.date}</Text>
+                        </View>
+                        <View style={{ flexDirection:'column', alignItems: 'center' , justifyContent: 'center'}}>
+                            <Text
+                                style={{
+                                    fontWeight: 'bold',
+                                    color: item.type === 'got' ? 'green' : 'red',
+                                    marginHorizontal: 10,
+                                }}
+                            >
+                                {item.amount}
+                            </Text>
+                            {item.type === 'gave' && (
+                                <TouchableOpacity>
+                                    <Text style={styles.remind}>REMIND</Text>
+                                </TouchableOpacity>
+                            )}
+                        </View>
+                    </View>
+                )}
+                contentContainerStyle={styles.tabContent}
+            />
+        </>
     );
+
 
     const SuppliersRoute = () => (
         <ScrollView contentContainerStyle={styles.tabContent}>
+            <View style={{ backgroundColor: '#388e3c', paddingVertical: 10 }}>
+                <View style={styles.summaryColumn}>
+                    <View style={styles.summaryRow}>
+                        <View style={styles.summaryBox}>
+                            <Text style={styles.label}>You will give</Text>
+                            <Text style={styles.greenAmount}>₹ 0</Text>
+                        </View>
+                        <View style={styles.summaryBox}>
+                            <Text style={styles.label}>You will get</Text>
+                            <Text style={styles.redAmount}>₹ 0</Text>
+                        </View>
+                        <View style={styles.summaryBox}>
+                            <Text style={styles.label}>QR Collections</Text>
+                            <Text style={styles.blueAmount}>₹ 0</Text>
+                        </View>
+                    </View>
+                    <TouchableOpacity style={styles.viewReports}>
+                        <Icon name="assessment" size={16} color="#388e3c" />
+                        <Text style={styles.reportText}>VIEW REPORTS</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
             <Text style={styles.emptyText}>Add suppliers & manage payments</Text>
         </ScrollView>
     );
@@ -80,14 +161,16 @@ const PartiesScreen = ({navigation}) => {
     });
 
     const renderTabBar = props => (
-        <TabBar
-            {...props}
-            indicatorStyle={styles.tabIndicator}
-            style={styles.tabBar}
-            labelStyle={styles.tabLabel}
-            activeColor="#388e3c"
-            inactiveColor="#555"
-        />
+        <View style={{ backgroundColor: '#388e3c' }}>
+            <TabBar
+                {...props}
+                indicatorStyle={styles.tabIndicator}
+                style={styles.tabBar}
+                labelStyle={styles.tabLabel}
+                activeColor="#fff"
+                inactiveColor="#ccc"
+            />
+        </View>
     );
 
     const handleEditPress = () => {
@@ -147,36 +230,8 @@ const PartiesScreen = ({navigation}) => {
             <StatusBar backgroundColor="#388e3c" barStyle="light-content" />
 
             {/* Header */}
-            <View style={styles.header}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start', gap: 15, marginBottom: 30 }}>
-                    <Text style={styles.businessName}>{businessName}</Text>
-                    <TouchableOpacity onPress={handleEditPress}>
-                        <Icon name="edit" size={20} color="#fff" />
-                    </TouchableOpacity>
-                </View>
+            <CommonHeader title={businessName} onEditPress={handleEditPress} />
 
-                <View style={styles.summaryRow}>
-                    <View style={styles.summaryBox}>
-                        <Text style={styles.label}>You will give</Text>
-                        <Text style={styles.greenAmount}>₹ 0</Text>
-                    </View>
-                    <View style={styles.summaryBox}>
-                        <Text style={styles.label}>You will get</Text>
-                        <Text style={styles.redAmount}>₹ 0</Text>
-                    </View>
-                    <View style={styles.summaryBox}>
-                        <Text style={styles.label}>QR Collections</Text>
-                        <Text style={styles.blueAmount}>₹ 0</Text>
-                    </View>
-                </View>
-            </View>
-
-            <TouchableOpacity style={styles.viewReports}>
-                <Icon name="picture-as-pdf" size={16} color="#388e3c" />
-                <Text style={styles.reportText}>VIEW REPORTS</Text>
-            </TouchableOpacity>
-
-            {/* Swipeable Tabs */}
             <View style={styles.tabViewContainer}>
                 <TabView
                     navigationState={{ index, routes }}
@@ -252,7 +307,7 @@ const PartiesScreen = ({navigation}) => {
                         <ScrollView showsVerticalScrollIndicator={false}>
                             {kitabs.map(renderKitabItem)}
                         </ScrollView>
-                        
+
                         <TouchableOpacity style={styles.createNewKitabBtn}>
                             <Icon name="add" size={20} color="#fff" />
                             <Text style={styles.createNewKitabText}>CREATE NEW KHATABOOK</Text>
@@ -272,40 +327,39 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#f4f6fa',
     },
-    header: {
-        backgroundColor: '#388e3c',
-        padding: 16,
-    },
     businessName: {
         color: '#fff',
         fontSize: 18,
         fontWeight: '600',
+    },
+    summaryColumn: {
+        backgroundColor: '#388e3c',
+        flexDirection: 'column',
+        alignItems: 'center',
     },
     summaryRow: {
         flexDirection: 'row',
         backgroundColor: '#fff',
         justifyContent: 'space-between',
         padding: 10,
-        borderRadius: 10,
+        borderTopStartRadius: 6,
+        borderTopEndRadius: 6,
+        width: '90%',
+        alignSelf: 'center',
     },
     summaryBox: {
         alignItems: 'center',
         flex: 1,
     },
-    // TabView Styles
     tabViewContainer: {
         flex: 1,
         backgroundColor: '#fff',
-        marginHorizontal: 10,
-        marginBottom: 10,
-        borderRadius: 10,
     },
     tabBar: {
-        backgroundColor: '#fff',
+        backgroundColor: '#388e3c',
         elevation: 0,
         shadowOpacity: 0,
-        borderBottomWidth: 1,
-        borderBottomColor: '#e0e0e0',
+        width: '50%',
     },
     tabIndicator: {
         backgroundColor: '#fbbf24',
@@ -317,9 +371,6 @@ const styles = StyleSheet.create({
     },
     tabContent: {
         flexGrow: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 20,
         minHeight: 200,
     },
     label: {
@@ -345,12 +396,21 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         paddingVertical: 8,
+        paddingHorizontal: 12,
+        backgroundColor: '#fff',
+        borderBottomStartRadius: 6,
+        borderBottomEndRadius: 6,
         alignSelf: 'center',
+        width: '90%',
+        justifyContent: 'center',
+        borderTopWidth: 0.5,
+        borderColor: '#ddd',
     },
     reportText: {
         color: '#388e3c',
         marginLeft: 4,
         fontWeight: '600',
+        fontSize: 12,
     },
     emptyText: {
         color: '#333',
@@ -478,9 +538,6 @@ const styles = StyleSheet.create({
     },
     selectedKitabItem: {
         backgroundColor: '#f8f9ff',
-        // borderColor: '#388e3c',
-        // borderWidth: 2,
-        // marginHorizontal: 16,
         borderRadius: 12,
         marginVertical: 4,
     },
@@ -530,4 +587,35 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         marginLeft: 8,
     },
+    searchRow: {
+        flexDirection: 'row',
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        paddingHorizontal: 10,
+        paddingVertical: 8,
+    },
+    searchInput: {
+        flex: 1,
+        backgroundColor: '#f1f1f1',
+        borderRadius: 6,
+        paddingHorizontal: 10,
+        height: 40,
+    },
+    customerItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 14,
+        backgroundColor: '#fff',
+        marginBottom: 1,
+    },
+    avatar: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        marginRight: 10,
+    },
+    customerName: { fontWeight: 'bold' },
+    date: { color: '#888', fontSize: 12 },
+    amount: { fontWeight: 'bold', color: 'red', marginHorizontal: 10 },
+    remind: { color: '#007bff', fontSize: 12 },
 });
