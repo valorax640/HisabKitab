@@ -42,9 +42,7 @@ const EntryScreen = ({navigation}) => {
 
             {/* Main Image */}
             <Image
-                source={{
-                    uri: 'https://plus.unsplash.com/premium_photo-1679496829715-364b4a17e087?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                }}
+                source={require('../../assets/image/entry.png')}
                 style={styles.mainImage}
                 resizeMode="cover"
             />

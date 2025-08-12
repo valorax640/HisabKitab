@@ -8,6 +8,7 @@ import OtpScreen from './src/screens/OtpScreen';
 import ContactList from './src/screens/ContactList';
 import AddCustomer from './src/screens/AddCustomer';
 import CustomerDetailsScreen from './src/screens/CustomerDetailsScreen';
+import Calculator from './src/screens/Calculator';
 import BottomTabs from './src/navigation/BottomTabs';
 import { ActivityIndicator, View } from 'react-native';
 import ConnectionWrapper from './src/components/ConnectionWrapper';
@@ -25,7 +26,7 @@ export default function App() {
         if (token) {
           setInitialRoute("Dashboard");
         } else {
-          setInitialRoute('CustomerDetailsScreen');
+          setInitialRoute('Calculator');
         }
       } catch (e) {
         setInitialRoute('CustomerDetailsScreen');
@@ -60,7 +61,7 @@ export default function App() {
           <Stack.Screen name="ContactList" component={ContactList} />
           <Stack.Screen name="AddCustomer" component={AddCustomer} />
           <Stack.Screen name="CustomerDetailsScreen" component={CustomerDetailsScreen} />
-          {/* <Stack.Screen name="Dashboard" component={DashboardTabs} /> */}
+          <Stack.Screen name="Calculator" component={Calculator} />
         </Stack.Navigator>
       </ConnectionWrapper>
     </NavigationContainer>

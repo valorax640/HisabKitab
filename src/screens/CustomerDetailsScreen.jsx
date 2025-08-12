@@ -293,7 +293,7 @@ const styles = StyleSheet.create({
         padding: 15,
         justifyContent: 'space-between',
         gap: 15,
-        backgroundColor: '#ccc',
+        backgroundColor: '#fff',
     },
     gaveBtn: {
         flex: 1,
