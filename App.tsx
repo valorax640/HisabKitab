@@ -13,6 +13,7 @@ import BottomTabs from './src/navigation/BottomTabs';
 import { ActivityIndicator, View } from 'react-native';
 import ConnectionWrapper from './src/components/ConnectionWrapper';
 import { setNavigationRef, requestUserPermission, NotificationListener } from './src/FirebaseNotification';
+import { checkAndPromptForNotifications } from './src/utils/notificationUtils';
 
 const Stack = createNativeStackNavigator();
 
@@ -26,7 +27,7 @@ export default function App() {
         if (token) {
           setInitialRoute("Dashboard");
         } else {
-          setInitialRoute('Calculator');
+          setInitialRoute('Dashboard');
         }
       } catch (e) {
         setInitialRoute('CustomerDetailsScreen');
@@ -38,6 +39,11 @@ export default function App() {
   useEffect(() => {
     requestUserPermission();
     NotificationListener();
+    
+    // Check and prompt for notifications after app loads
+    setTimeout(() => {
+      checkAndPromptForNotifications();
+    }, 3000); // Delay to ensure app is fully loaded
   }, []);
 
   if (initialRoute === '') {
